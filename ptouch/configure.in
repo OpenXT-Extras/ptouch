@@ -1,0 +1,103 @@
+dnl
+dnl
+dnl configure.in.head:
+dnl
+dnl $Id: configure.in,v 1.1 2011/02/16 22:24:36 root Exp $
+dnl
+dnl $Log: configure.in,v $
+dnl Revision 1.1  2011/02/16 22:24:36  root
+dnl *** empty log message ***
+dnl
+dnl
+dnl
+dnl
+
+dnl
+dnl Copyright (c) 2014 Citrix Systems, Inc.
+dnl 
+dnl This program is free software; you can redistribute it and/or modify
+dnl it under the terms of the GNU General Public License as published by
+dnl the Free Software Foundation; either version 2 of the License, or
+dnl (at your option) any later version.
+dnl 
+dnl This program is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+dnl 
+dnl You should have received a copy of the GNU General Public License
+dnl along with this program; if not, write to the Free Software
+dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+dnl
+
+AC_PREREQ(2.13)
+AC_INIT(src/ptouch.c)
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+AC_PROG_AWK
+AC_CHECK_PROG(MD5SUM,md5sum,md5sum)
+AC_CHECK_PROG(GREP,grep,grep)
+
+AC_SYS_LARGEFILE
+
+PTOUCH_MAJOR_VERSION=`cat $srcdir/version-major`
+PTOUCH_MINOR_VERSION=`cat $srcdir/version-minor`
+PTOUCH_MICRO_VERSION=`cat $srcdir/version-micro`
+
+
+PTOUCH_VERSION=$PTOUCH_MAJOR_VERSION.$PTOUCH_MINOR_VERSION.$PTOUCH_MICRO_VERSION
+
+AC_SUBST(PTOUCH_MAJOR_VERSION)
+AC_SUBST(PTOUCH_MINOR_VERSION)
+AC_SUBST(PTOUCH_MICRO_VERSION)
+AC_SUBST(PTOUCH_VERSION)
+
+
+VERSION=$PTOUCH_VERSION
+PACKAGE=ptouch
+
+AM_INIT_AUTOMAKE($PACKAGE,$VERSION)
+
+
+AM_CONFIG_HEADER(src/config.h)
+
+# Checks for header files.
+AC_CHECK_HEADERS([malloc.h])
+AC_HEADER_STDC
+AC_FUNC_MALLOC
+
+AC_C_INLINE
+AC_C_CONST
+
+
+
+NETPBM_CONFIG="no"
+AC_ARG_WITH(netpbm,
+        AC_HELP_STRING([--with-netpbm=PATH],[path to base of netpbm]),
+                NETPBM_CONFIG=$with_netpbm,NETPBM_CONFIG=no)
+
+case "x$NETPBM_CONFIG" in
+        xno|x|xyes)
+		NETPBM_CONFIG="/usr"
+        ;;
+        *)
+        ;;
+esac
+
+NETPBM_INC="-I${NETPBM_CONFIG}/include/netpbm"
+NETPBM_LIB="-L${NETPBM_CONFIG}/lib -lnetpbm"
+
+AC_SUBST(NETPBM_INC)
+AC_SUBST(NETPBM_LIB)
+
+
+
+AC_OUTPUT([Makefile
+	   src/Makefile])
+
+
